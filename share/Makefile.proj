@@ -1,0 +1,30 @@
+include ../common.mk
+
+SOURCES=$(wildcard *.c)
+OBJECTS=$(patsubst %.c,%.rel,$(SOURCES))
+
+ifeq "$(PROJECT)" ""
+TARGET=${shell pwd | sed -e 's/^.*\/\([A-Za-z0-9_]*\)$$/\1\.hex/'}
+else
+TARGET=$(PROJECT).hex
+endif
+
+CFLAGS=$(CFLAGS) -L $(DWENGOLIB) -I $(DWENGOHEAD) -I $(SDCC_INCLUDE)
+LFLAGS=$(LFLAGS)
+PFLAGS=-PPIC18F4550 -M -T -R -B$(PK2_BIN)
+
+all: $(TARGET) $(OBJECTS)
+
+program: $(TARGET) $(OBJECTS)
+	$(PK2) -F$(TARGET) $(PFLAGS)
+
+clean:
+	$(RM) *.rel *.asm *.lst *.hex *.err *.i
+
+$(TARGET): $(OBJECTS)
+	$(SDCC_C) $< libio18f4550.lib libc18f.lib libsdcc.lib $(DWENGOLIB)/libdwengo.lib $(LFLAGS) -o $@
+
+%.rel: %.c
+	$(SDCC_C) -c $(CFLAGS) $<
+
+.PHONY: all program clean
