@@ -2,7 +2,7 @@ Dwengo library
 ==============
 For more information visit the [Dwengo](ww.dwengo.org) homepage.
 
-Requeriments
+Requirements
 ------------
 To use and compile the Dwengo library for your projects and to program your Dwengo board you need to have [SDCC](http://sdcc.sourceforge.net/) 3.4.0 (or newer) and pk2cmd.
 
